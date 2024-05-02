@@ -6,4 +6,14 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 });
 
-module.exports = imagekit;
+module.exports = {
+  upload: async (buffer, originalname) => {
+    const { url, fileId } = await imagekit.upload({
+      file: buffer.toString('base64'),
+      fileName: Date.now() + '-' + originalname.replace(/ /g, '-'),
+      folder: 'images-sharing-app/images/'
+    });
+
+    return { url, fileId };
+  }
+};

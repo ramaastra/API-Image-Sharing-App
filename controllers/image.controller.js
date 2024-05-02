@@ -38,11 +38,7 @@ module.exports = {
       });
     }
 
-    const { url, fileId } = await imagekit.upload({
-      file: buffer.toString('base64'),
-      fileName: Date.now() + '-' + originalname.replace(/ /g, '-'),
-      folder: 'images-sharing-app/images/'
-    });
+    const { url, fileId } = await imagekit.upload(buffer, originalname);
 
     const createdImage = await prisma.image.create({
       data: { title, description, url, fileId },
