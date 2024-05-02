@@ -1,7 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
+const imagekit = require('../libs/imagekit');
 const prisma = new PrismaClient();
 
-const MB_IN_BYTES = 1024 ^ 2;
+const MB_IN_BYTES = 1024 ** 2;
 const MAXIMUM_FILE_SIZE = 5 * MB_IN_BYTES;
 
 module.exports = {
@@ -35,6 +36,26 @@ module.exports = {
       });
     }
 
-    res.status(200).send('SUCCESS');
+    const { url, fileId } = await imagekit.upload({
+      file: req.file.buffer.toString('base64'),
+      fileName: Date.now() + '-' + req.file.originalname.replace(/ /g, '-'),
+      folder: 'images-sharing-app/images/'
+    });
+
+    const createdImage = await prisma.image.create({
+      data: { title, description, url, fileId },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        url: true
+      }
+    });
+
+    res.status(201).json({
+      status: true,
+      message: 'New image record created',
+      data: createdImage
+    });
   }
 };
