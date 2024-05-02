@@ -112,5 +112,26 @@ module.exports = {
       message: 'Image updated',
       data: updatedImage
     });
+  },
+  deleteRecord: async (req, res) => {
+    const { id } = req.params;
+    const image = await prisma.image.findFirst({ where: { id: parseInt(id) } });
+
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        message: 'Cannot find image with the corresponding id',
+        data: null
+      });
+    }
+
+    await imagekit.delete(image.fileId);
+    await prisma.image.delete({ where: { id: parseInt(id) } });
+
+    return res.status(200).json({
+      status: true,
+      message: `Image with id ${id} deleted`,
+      data: null
+    });
   }
 };
