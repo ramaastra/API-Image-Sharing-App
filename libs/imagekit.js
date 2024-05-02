@@ -15,5 +15,8 @@ module.exports = {
     });
 
     return { url, fileId };
+  },
+  delete: async (fileId) => {
+    await imagekit.deleteFile(fileId);
   }
 };
