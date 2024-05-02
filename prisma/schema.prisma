@@ -12,6 +12,7 @@ model Image {
   title       String @db.VarChar(30)
   description String @db.VarChar(150)
   url         String
+  fileId      String @map("file_id")
 
   @@map("images")
 }
