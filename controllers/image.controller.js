@@ -16,10 +16,9 @@ module.exports = {
     });
   },
   create: async (req, res) => {
-    const { file } = req;
-    const { title, description } = req.body;
+    const { file, body } = req;
 
-    if (!file || !title || !description) {
+    if (!file || !body || !body.title || !body.description) {
       return res.status(400).json({
         status: false,
         message: `Field 'file', 'title', and 'description' are required`,
@@ -41,6 +40,7 @@ module.exports = {
 
     const { url, fileId } = await imagekit.upload(buffer, originalname);
 
+    const { title, description } = body;
     const createdImage = await prisma.image.create({
       data: { title, description, url, fileId },
       select: {
