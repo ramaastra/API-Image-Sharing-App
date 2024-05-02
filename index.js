@@ -8,7 +8,24 @@ app.use(morgan('dev'));
 app.get('/', (req, res) => {
   res.status(200).json({
     status: true,
-    message: 'Successfully connected to server',
+    message: 'API is available at /api/v1',
+    data: null
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).json({
+    status: false,
+    message: err.message,
+    data: null
+  });
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: false,
+    message: `${req.method} ${req.url} is not available`,
     data: null
   });
 });
