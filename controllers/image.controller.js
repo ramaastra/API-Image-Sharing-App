@@ -26,7 +26,9 @@ module.exports = {
       });
     }
 
-    if (req.file.size > MAXIMUM_FILE_SIZE) {
+    const { size, buffer, originalname } = file;
+
+    if (size > MAXIMUM_FILE_SIZE) {
       return res.status(400).json({
         status: false,
         message: `File size limit exceeds (${
@@ -37,8 +39,8 @@ module.exports = {
     }
 
     const { url, fileId } = await imagekit.upload({
-      file: req.file.buffer.toString('base64'),
-      fileName: Date.now() + '-' + req.file.originalname.replace(/ /g, '-'),
+      file: buffer.toString('base64'),
+      fileName: Date.now() + '-' + originalname.replace(/ /g, '-'),
       folder: 'images-sharing-app/images/'
     });
 
