@@ -15,6 +15,32 @@ module.exports = {
       data: images
     });
   },
+  getById: async (req, res) => {
+    const { id } = req.params;
+    const image = await prisma.image.findFirst({
+      where: { id: parseInt(id) },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        url: true
+      }
+    });
+
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        message: 'Cannot find image with the corresponding id',
+        data: null
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: `Fetched image record with id ${id}`,
+      data: image
+    });
+  },
   create: async (req, res) => {
     const { file, body } = req;
 
