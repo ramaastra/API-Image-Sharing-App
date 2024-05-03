@@ -14,6 +14,6 @@ router.get('/', getAll);
 router.get('/:id', getById);
 router.post('/', upload.single('file'), create);
 router.patch('/:id', upload.single('file'), update);
-router.delete('/:id', upload.single('file'), deleteRecord);
+router.delete('/:id', deleteRecord);
 
 module.exports = router;
