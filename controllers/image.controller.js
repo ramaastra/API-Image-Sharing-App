@@ -93,7 +93,9 @@ module.exports = {
     }
 
     const { id } = req.params;
-    const image = await prisma.image.findFirst({ where: { id: parseInt(id) } });
+    const image = await prisma.image.findFirst({
+      where: { id: parseInt(id) }
+    });
 
     if (!image) {
       return res.status(400).json({
@@ -112,6 +114,17 @@ module.exports = {
     }
 
     if (req.file) {
+      const { size } = req.file;
+      if (size > MAXIMUM_FILE_SIZE) {
+        return res.status(400).json({
+          status: false,
+          message: `File size limit exceeds (${
+            MAXIMUM_FILE_SIZE / MB_IN_BYTES
+          }MB)`,
+          data: null
+        });
+      }
+
       await imagekit.delete(image.fileId);
 
       const { buffer, originalname } = req.file;
