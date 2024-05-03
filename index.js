@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const router = require('./router');
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(morgan('dev'));
@@ -34,5 +34,5 @@ app.use((req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is up and running on http://localhost:${port}`);
+  console.log(`Server is up and running on port: ${port}`);
 });
